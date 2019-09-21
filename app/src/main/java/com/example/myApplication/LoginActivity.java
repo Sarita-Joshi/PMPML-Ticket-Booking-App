@@ -42,6 +42,13 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        firebaseAuth = FirebaseAuth.getInstance();
+
+//        if(firebaseAuth.getCurrentUser() != null){
+//            //start prof
+//            finish();
+//            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//        }
 
         sendOTP = findViewById(R.id.button);
         confirm = findViewById(R.id.button2);
@@ -137,7 +144,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 PhoneAuthProvider.getInstance().verifyPhoneNumber(
                         phonenNmber.getText().toString(),        // Phone number to verify
-                        60,                 // Timeout duration
+                        120,                 // Timeout duration
                         TimeUnit.SECONDS,   // Unit of timeout
                         LoginActivity.this,               // Activity (for callback binding)
                         mCallbacks);        // OnVerificationStateChangedCallbacks

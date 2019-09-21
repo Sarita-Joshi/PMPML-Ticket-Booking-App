@@ -11,44 +11,52 @@
         android:orientation="vertical">
 
         <EditText
-            android:id="@+id/edit_fname"
+            android:id="@+id/source"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="FirstName" />
+            android:hint="Source" />
 
         <EditText
-            android:id="@+id/edit_lname"
+            android:id="@+id/destination"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="LastName" />
+            android:hint="Destination" />
 
         <EditText
-            android:id="@+id/edit_age"
+            android:id="@+id/busNo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="number" />
+            android:inputType="number"
+            android:hint="bus number"/>
 
+
+        <EditText
+            android:id="@+id/adults"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number"
+            android:hint="number of adults"/>
+
+        <EditText
+            android:id="@+id/children"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number"
+            android:hint="number of children"/>
         <Button
+
             android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="AddToDb" />
+            android:text="ticket kadhne" />
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:text="TextView" />
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Button" />
     </LinearLayout>
 </RelativeLayout>

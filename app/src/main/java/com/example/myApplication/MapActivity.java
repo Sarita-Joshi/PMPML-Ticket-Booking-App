@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -150,11 +151,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 finish();
                 startActivity(new Intent(MapActivity.this, LoginActivity.class));
                 break;
-                case R.id.action_scan:
-                    finish();
-                    startActivity(new Intent(MapActivity.this, QRCodeScanner.class));
-                    break;
-
 
         }
         return super.onOptionsItemSelected(item);
@@ -170,7 +166,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         db.collection("User").document(FirebaseAuth.getInstance()
                 .getCurrentUser().getPhoneNumber())
-                .set(city)
+                .set(city, SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

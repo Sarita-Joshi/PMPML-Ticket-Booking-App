@@ -5,8 +5,4 @@
         android:id="@+id/action_logout"
         android:title="logout"/>
 
-    <item
-        android:id="@+id/action_scan"
-        android:title="scan QR code"/>
-
 </menu>

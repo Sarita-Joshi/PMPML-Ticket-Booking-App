@@ -34,16 +34,14 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.2.0'
     implementation 'com.google.firebase:firebase-firestore:21.1.1'
     implementation 'com.google.firebase:firebase-auth:19.0.0'
-
+    implementation 'com.firebaseui:firebase-ui-firestore:6.0.2'  //firebase UI
     //   google maps
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
-    implementation 'com.google.android.libraries.places:places:1.0.0'
-
-
 
     //QR scanner library github
     implementation 'me.dm7.barcodescanner:zxing:1.9'
+    implementation 'com.google.android.gms:play-services-vision:18.0.0'
 
 }
 

@@ -5,11 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -79,7 +83,28 @@ public class MainActivity extends AppCompatActivity {
         ft1.commit();
     }
 
+    @Override
 
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater= getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
 
+        return true;
+    }
 
+    //handle option clicks
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_logout:
+                FirebaseAuth.getInstance().signOut();
+                finish();
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
