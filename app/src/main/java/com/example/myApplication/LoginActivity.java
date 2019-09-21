@@ -44,11 +44,11 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         firebaseAuth = FirebaseAuth.getInstance();
 
-//        if(firebaseAuth.getCurrentUser() != null){
-//            //start prof
-//            finish();
-//            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-//        }
+        if(firebaseAuth.getCurrentUser() != null){
+            //start prof
+            finish();
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        }
 
         sendOTP = findViewById(R.id.button);
         confirm = findViewById(R.id.button2);
