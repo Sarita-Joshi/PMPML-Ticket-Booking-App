@@ -59,7 +59,7 @@ public class Ticket_fragment extends Fragment {
     private void setUpRecyclerView() {
         Log.e("Ticket", "setting up recycler view");
         Query query =
-                db.collection("User").document("+919168106822")
+                db.collection("User").document(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
                 .collection("Ticket").orderBy("timestamp");
 
         FirestoreRecyclerOptions<Ticket> options = new FirestoreRecyclerOptions.Builder<Ticket>()
