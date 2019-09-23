@@ -21,6 +21,9 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.concurrent.TimeUnit;
 
@@ -29,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
 
     Button sendOTP,confirm;
     EditText phonenNmber, otp;
-    String TAG = "maps app";
+    String TAG = "mapsapp";
     String mVerificationId;
 
     PhoneAuthProvider.ForceResendingToken mResendToken;
@@ -138,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void onSendOTPClicked() {
-        Log.d(TAG, "on opt clicked:"  );
+        Log.d(TAG, "on opt clicked:");
         sendOTP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -152,7 +155,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-
     }
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
@@ -163,12 +165,44 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             finish();
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            intent.putExtra("NUM", phonenNmber.getText().toString());
-                            startActivity(intent);
-                            Log.d(TAG, "signInWithCredential:success");
 
-                            FirebaseUser user = task.getResult().getUser();
+                            FirebaseFirestore db= FirebaseFirestore.getInstance();
+                            DocumentReference docref=db.collection("User").document(phonenNmber.getText().toString());
+                            docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if(task.isSuccessful())
+                                    {
+                                        DocumentSnapshot ds=task.getResult();
+                                        if(ds.exists())
+                                        {
+                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                            intent.putExtra("NUM", phonenNmber.getText().toString());
+                                            startActivity(intent);
+                                            Log.d(TAG, "signInWithCredential:success");
+                                        }
+                                        else
+                                        {
+
+                                            Intent intent = new Intent(LoginActivity.this, UserDetails.class);
+                                            intent.putExtra("NUM", phonenNmber.getText().toString());
+                                            startActivity(intent);
+                                            Log.d(TAG, "signInWithCredential:success");
+                                        }
+
+                                    }
+
+
+                                }
+                            });
+
+
+
+
+
+
+
+                          //  FirebaseUser user = task.getResult().getUser();
                             // ...
                         } else {
                             // Sign in failed, display a message and update the UI

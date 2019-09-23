@@ -5,12 +5,102 @@
     android:layout_height="match_parent"
     tools:context=".Profile_fragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="PROFILE" />
+    <LinearLayout
+        android:layout_width="165dp"
+        android:layout_height="383dp"
+        android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/namelabel"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:text="NAME:" />
 
+        <TextView
+            android:id="@+id/phonelabel"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:text="PHONE:" />
 
+        <TextView
+            android:id="@+id/tokenlabel"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:text="TOKENS:" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:text="Email:" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="248dp"
+        android:layout_height="383dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="-4dp"
+        android:layout_marginRight="-4dp"
+
+        android:layout_marginBottom="348dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/name_value"
+            android:layout_width="match_parent"
+            android:layout_height="36dp" />
+
+        <TextView
+            android:id="@+id/phone_value"
+            android:layout_width="match_parent"
+            android:layout_height="36dp" />
+
+        <TextView
+            android:id="@+id/token_value"
+            android:layout_width="match_parent"
+            android:layout_height="36dp" />
+
+        <TextView
+            android:id="@+id/email_value"
+            android:layout_width="match_parent"
+            android:layout_height="36dp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button_add"
+        android:layout_width="129dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="47dp"
+        android:layout_marginLeft="47dp"
+
+        android:layout_marginTop="121dp"
+        android:layout_marginEnd="234dp"
+        android:layout_marginRight="234dp"
+
+        android:layout_marginBottom="179dp"
+        android:text="ADDTokens" />
+
+    <Button
+        android:id="@+id/logout_button"
+        android:layout_width="129dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="53dp"
+        android:layout_marginRight="53dp"
+
+        android:layout_marginBottom="179dp"
+        android:text="Logout" />
 </RelativeLayout>
