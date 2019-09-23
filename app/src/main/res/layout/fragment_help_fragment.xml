@@ -5,10 +5,29 @@
     android:layout_height="match_parent"
     tools:context=".Help_fragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="HELP" />
+        android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="HelpLine:9284221109" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:text="HelpEmail:apoorv.kakadeg@gmail.com" />
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Button"
+            />
+
+    </LinearLayout>
 </RelativeLayout>

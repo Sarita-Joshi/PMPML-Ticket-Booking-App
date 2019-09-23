@@ -23,4 +23,5 @@
         android:id="@+id/profile_nav"
         android:icon="@drawable/baseline_perm_identity_black_24dp"
         android:title="Profile" />
+    <item android:title="Info" />
 </menu>
