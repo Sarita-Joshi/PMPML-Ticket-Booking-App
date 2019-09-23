@@ -2,6 +2,7 @@ package com.example.myApplication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -17,30 +18,27 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
-
-
-
     BottomNavigationView botnavview;
 
     Home_fragment home_fragment;
-
     Ticket_fragment ticket_fragment;
     Help_fragment help_fragment;
     Profile_fragment profile_fragment;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.e("fragments", "oncreate");
         botnavview=(BottomNavigationView)findViewById(R.id.bottom_nav);
+
+
         home_fragment=new Home_fragment();
         ticket_fragment=new Ticket_fragment();
         help_fragment=new Help_fragment();
         profile_fragment=new Profile_fragment();
 
+        setFragment(home_fragment);
         Log.e("fragments", "oncreate");
         botnavview.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override

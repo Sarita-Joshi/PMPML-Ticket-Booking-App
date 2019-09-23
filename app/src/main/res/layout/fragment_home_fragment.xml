@@ -3,12 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Home_fragment">
+    tools:context=".Home_fragment"
+    android:background="#fff">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_marginBottom="?actionBarSize"
+        android:orientation="vertical"
+        android:padding="5dp">
 
         <EditText
             android:id="@+id/source"
@@ -18,22 +21,47 @@
             android:inputType="textPersonName"
             android:hint="Source" />
 
-        <EditText
-            android:id="@+id/destination"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Bus Number: "
+            android:layout_marginEnd="5dp"
+            android:textSize="17sp"/>
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="Destination" />
+            android:orientation="horizontal"
+            android:paddingVertical="10dp">
 
-        <EditText
-            android:id="@+id/busNo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="number"
-            android:hint="bus number"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Destination: "
+                android:textSize="17sp"
+                android:layout_marginEnd="5dp"/>
 
+            <Spinner
+                android:id="@+id/spinner2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+
+        </LinearLayout>
 
         <EditText
             android:id="@+id/adults"
@@ -50,12 +78,22 @@
             android:ems="10"
             android:inputType="number"
             android:hint="number of children"/>
-        <Button
 
+        <Button
             android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ticket kadhne" />
+            android:layout_marginVertical="10dp"
+            android:text="ticket kadhne"
+            android:textSize="14sp"
+            android:textColor="@color/colorPrimary"
+            android:background="@drawable/button_style_1"/>
+
+        <fragment
+            android:id="@+id/map1"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
 
     </LinearLayout>

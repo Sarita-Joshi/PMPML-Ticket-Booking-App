@@ -9,7 +9,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/rv"/>
+        android:id="@+id/rv"
+        android:background="#fff"
+
+        android:layout_marginBottom="?actionBarSize"/>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

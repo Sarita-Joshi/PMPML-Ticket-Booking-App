@@ -59,7 +59,7 @@ public class Ticket_fragment extends Fragment {
     private void setUpRecyclerView() {
         Log.e("Ticket", "setting up recycler view");
         Query query =
-                db.collection("User").document("+919168106822")
+                db.collection("User").document(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
                 .collection("Ticket").orderBy("timestamp");
 
         FirestoreRecyclerOptions<Ticket> options = new FirestoreRecyclerOptions.Builder<Ticket>()
@@ -67,14 +67,15 @@ public class Ticket_fragment extends Fragment {
                // .setLifecycleOwner(this)
                 .build();
 
-        adapter = new TicketAdapter(options);
-        //recyclerView.setHasFixedSize(true);
+        adapter = new TicketAdapter(options,new TicketAdapter.ClickListener() {
+            @Override public void onPositionClicked(int position) {
+                // callback performed on click
+            }
+        });
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 
-        if(adapter.getItemCount()<=0){
-            Toast.makeText(getActivity(), "no tickets yet", Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
