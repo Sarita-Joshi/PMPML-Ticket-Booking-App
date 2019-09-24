@@ -2,24 +2,27 @@ package com.example.myApplication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.example.myApplication.fragments.Help_fragment;
+import com.example.myApplication.fragments.Home_fragment;
+import com.example.myApplication.fragments.Profile_fragment;
+import com.example.myApplication.fragments.Ticket_fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
     BottomNavigationView botnavview;
-
     Home_fragment home_fragment;
     Ticket_fragment ticket_fragment;
     Help_fragment help_fragment;
@@ -30,9 +33,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.e("fragments", "oncreate");
+        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"white\">" + getString(R.string.app_name) + "</font>"));
         botnavview=(BottomNavigationView)findViewById(R.id.bottom_nav);
-
-
         home_fragment=new Home_fragment();
         ticket_fragment=new Ticket_fragment();
         help_fragment=new Help_fragment();

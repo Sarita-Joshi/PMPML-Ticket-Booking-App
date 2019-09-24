@@ -1,5 +1,35 @@
 <resources>
     <string name="app_name">PMPML_TicketBooking</string>
 
+
+    <string name="Source_Stop">source</string>
+    <string name="Destination_Stop">source</string>
+    <string name="Bus_NO">busNo</string>
+    <string name="Ticket_No">ticketNo</string>
+    <string name="Trip_No">tripNo</string>
+    <string name="Total_Price">total</string>
+    <string name="Depot_Name">depot</string>
+
+    <string name="user_collection">User</string>
+    <string name="stop_collection">Stop</string>
+    <string name="route_collection">Route</string>
+    <string name="ticket_collection">Ticket</string>
+    <string name="prices_collection">Price</string>
+
+
+    <string-array name="array_options">
+        <item>Edit Profile</item>
+        <item>My Tickets</item>
+        <item>Wallet</item>
+        <item>Password Settings</item>
+        <item>Call Support</item>
+        <item>Information</item>
+        <item>Report An Issue</item>
+        <item>About Us</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
 </resources>

@@ -2,19 +2,15 @@
 
 
 
-package com.example.myApplication;
+package com.example.myApplication.fragments;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,23 +25,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.Dot;
-import com.google.android.gms.maps.model.Gap;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PatternItem;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
+import com.example.myApplication.R;
+import com.example.myApplication.classes.Ticket;
+import com.example.myApplication.adapters.TicketAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -53,22 +37,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
-import com.google.firebase.firestore.model.Document;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import io.grpc.Server;
 
 
 public class Home_fragment extends Fragment
@@ -88,7 +66,7 @@ FirebaseUser mUser;
 FirebaseFirestore db;
 ProgressDialog pd;
 
-    Home_fragment()
+    public Home_fragment()
     {}
 
 
@@ -149,7 +127,7 @@ ProgressDialog pd;
         return v;
     }
 
-       private void sourceTextWatcher() {
+    private void sourceTextWatcher() {
 
         source.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -163,9 +141,33 @@ ProgressDialog pd;
                 return false;
             }
         });
+
+        source.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(bus_no.isEnabled()){
+                    bus_no.setAdapter(null);
+                    bus_no.setEnabled(false);
+                    dest.setAdapter(null);
+                    dest.setEnabled(false);
+                }
+            }
+
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     private void setBusNoSPinner(String str) {
+
         final List<String> list_of_bus_no = new ArrayList<>();
         list_of_bus_no.add("Select bus number");
 
@@ -213,6 +215,7 @@ ProgressDialog pd;
     private void setDestSpinnerList(String str) {
 
         list = new ArrayList<String>();
+        list.add("Select destination");
         db.collection("Route").document(str).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -222,7 +225,7 @@ ProgressDialog pd;
                 }
                 list = (ArrayList<String>)documentSnapshot.get("stopsequence");
 
-                for(int i=0;;){
+                for(int i=1;;){
                     if(!list.get(i).equals(source.getText().toString()))
                     list.remove(i);
                     else
@@ -261,7 +264,8 @@ ProgressDialog pd;
         map.put("ticketNo", "534");
         map.put("depot", "Manapa");
 
-        total = Integer.parseInt(adult.getText().toString()) * 15 + Integer.parseInt(children.getText().toString()) * 10;
+        total = Integer.parseInt(adult.getText().toString()) *
+                + Integer.parseInt(children.getText().toString()) * 10;
         map.put("total", total);
         map.put("timestamp", FieldValue.serverTimestamp());
 
@@ -349,8 +353,30 @@ ProgressDialog pd;
             }
         });
 
-
     }
+
+            private static double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
+                if ((lat1 == lat2) && (lon1 == lon2)) {
+                    return 0;
+                }
+                else {
+                    double theta = lon1 - lon2;
+                    double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+                    dist = Math.acos(dist);
+                    dist = Math.toDegrees(dist);
+                    dist = dist * 60 * 1.1515;
+                    if (unit == "K") {
+                        dist = dist * 1.609344;
+                    } else if (unit == "N") {
+                        dist = dist * 0.8684;
+                    }
+                    return (dist);
+                }
+            }
+
+
+
+
 
 //    private void setUpMap() {
 //

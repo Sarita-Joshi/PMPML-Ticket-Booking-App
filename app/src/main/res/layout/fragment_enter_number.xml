@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+    tools:context=".MainActivity">
+   
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:gravity="center_horizontal"
+       android:layout_alignParentBottom="true"
+       android:layout_marginBottom="40dp"
+       android:orientation="vertical"
+       android:background="#fff">
+
+
+       <ImageView
+           android:layout_width="200dp"
+           android:layout_height="200dp"
+           android:scaleType="centerCrop"
+           android:layout_marginTop="10dp"/>
+
+
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="8dp"
+           android:text="VERIFICATION"
+           android:textAppearance="@style/TextAppearance.AppCompat.Large"
+           android:textStyle="bold"
+           android:textColor="#4d4d4d" />
+
+
+
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginHorizontal="35dp"
+           android:layout_marginVertical="15dp"
+           android:text="OTP has been sent to you on your mobile phone. Please enter it below."
+           android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+           android:textAlignment="center"/>
+
+       <EditText
+           android:id="@+id/userPhone"
+           android:layout_width="250dp"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="22dp"
+           android:layout_marginBottom="8dp"
+           android:hint="Your Phone number!"
+           android:inputType="phone"
+           android:padding="10dp"
+           android:background="#fff"/>
+
+
+
+       <Button
+           android:id="@+id/button"
+           android:layout_width="250dp"
+           android:layout_height="wrap_content"
+           android:layout_marginStart="8dp"
+           android:layout_marginEnd="8dp"
+           android:layout_marginBottom="40dp"
+           android:text="CONTINUE"
+           android:textAllCaps="false"
+           android:textColor="@android:color/white"
+           android:textSize="17sp"
+           android:background="@color/colorPrimary"/>
+
+
+       <TextView
+           android:id="@+id/textView_notime"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="8dp"
+           android:layout_marginBottom="8dp"
+           android:text="NO, OTHER TIME"
+           android:textAlignment="center"
+           android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+           android:textStyle="bold"
+           app:layout_constraintTop_toTopOf="parent" />
+
+   </LinearLayout>
+    
+</RelativeLayout>

@@ -12,16 +12,16 @@
         android:orderInCategory="3"
         android:id="@+id/help_nav"
         android:icon="@drawable/baseline_help_black_24dp"
-        android:title="Help" />
+        android:title="Info" />
     <item
         android:orderInCategory="2"
         android:id="@+id/ticket_nav"
         android:icon="@drawable/ticket1"
-        android:title="MyTicket" />
+        android:title="My Tickets" />
     <item
         android:orderInCategory="4"
         android:id="@+id/profile_nav"
         android:icon="@drawable/baseline_perm_identity_black_24dp"
         android:title="Profile" />
-    <item android:title="Info" />
+
 </menu>

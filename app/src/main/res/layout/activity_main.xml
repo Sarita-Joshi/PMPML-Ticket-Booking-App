@@ -25,6 +25,7 @@
         android:layout_alignParentBottom="true"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:background="#fff"
         app:menu="@menu/nav_items" />
 
 

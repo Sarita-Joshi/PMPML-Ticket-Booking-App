@@ -3,104 +3,90 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Profile_fragment">
+    android:orientation="vertical"
+    tools:context=".fragments.Profile_fragment">
 
     <LinearLayout
-        android:layout_width="165dp"
-        android:layout_height="383dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="?actionBarSize"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/namelabel"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:text="NAME:" />
-
-        <TextView
-            android:id="@+id/phonelabel"
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:text="PHONE:" />
-
-        <TextView
-            android:id="@+id/tokenlabel"
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:text="TOKENS:" />
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:text="Email:" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:elevation="3dp"
+            android:layout_margin="10dp"
+            android:background="#fff">
 
     <LinearLayout
-        android:layout_width="248dp"
-        android:layout_height="383dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="-4dp"
-        android:layout_marginRight="-4dp"
-
-        android:layout_marginBottom="348dp"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="#fff">
 
         <TextView
             android:id="@+id/name_value"
-            android:layout_width="match_parent"
-            android:layout_height="36dp" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textStyle="bold"
+            android:paddingVertical="3dp"/>
 
         <TextView
             android:id="@+id/phone_value"
-            android:layout_width="match_parent"
-            android:layout_height="36dp" />
-
-        <TextView
-            android:id="@+id/token_value"
-            android:layout_width="match_parent"
-            android:layout_height="36dp" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="phone number"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textStyle="bold"
+            android:paddingVertical="3dp"/>
 
         <TextView
             android:id="@+id/email_value"
-            android:layout_width="match_parent"
-            android:layout_height="36dp" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="email address"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textStyle="bold"
+            android:paddingVertical="3dp"/>
+
+
+        <TextView
+            android:id="@+id/token_value"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="Balance"
+            android:textAlignment="center"
+            android:paddingVertical="5dp"
+            android:background="@color/colorPrimaryDark"
+            android:textColor="#fff"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_marginVertical="12dp"/>
+
+
     </LinearLayout>
 
-    <Button
-        android:id="@+id/button_add"
-        android:layout_width="129dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
+        </androidx.cardview.widget.CardView>
 
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="3dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="#fff">
 
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="47dp"
-        android:layout_marginLeft="47dp"
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/options"
+                android:background="#fff"/>
 
-        android:layout_marginTop="121dp"
-        android:layout_marginEnd="234dp"
-        android:layout_marginRight="234dp"
+        </androidx.cardview.widget.CardView>
 
-        android:layout_marginBottom="179dp"
-        android:text="ADDTokens" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/logout_button"
-        android:layout_width="129dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
 
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="53dp"
-        android:layout_marginRight="53dp"
-
-        android:layout_marginBottom="179dp"
-        android:text="Logout" />
 </RelativeLayout>

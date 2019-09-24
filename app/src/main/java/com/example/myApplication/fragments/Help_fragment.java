@@ -1,4 +1,4 @@
-package com.example.myApplication;
+package com.example.myApplication.fragments;
 
 import android.Manifest;
 import android.content.Intent;
@@ -15,11 +15,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.myApplication.R;
+
 
 public class Help_fragment extends Fragment {
 
 
-    Help_fragment()
+    public Help_fragment()
     {}
 
     private Button button;

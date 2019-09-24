@@ -1,4 +1,4 @@
-package com.example.myApplication;
+package com.example.myApplication.classes;
 
 import com.google.firebase.Timestamp;
 
