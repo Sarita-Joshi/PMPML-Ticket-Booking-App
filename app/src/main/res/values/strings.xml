@@ -16,7 +16,10 @@
     <string name="ticket_collection">Ticket</string>
     <string name="prices_collection">Price</string>
 
+    <string name="aboutus">
+        PMPML ticket booking app is made for the convenience of both the commuters and the conductor.
 
+    </string>
     <string-array name="array_options">
         <item>Edit Profile</item>
         <item>My Tickets</item>

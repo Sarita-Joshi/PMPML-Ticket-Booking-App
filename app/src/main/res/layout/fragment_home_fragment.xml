@@ -13,6 +13,12 @@
         android:orientation="vertical"
         android:padding="5dp">
 
+        <Button
+            android:id="@+id/button_source"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Source" />
+
         <EditText
             android:id="@+id/source"
             android:layout_width="match_parent"

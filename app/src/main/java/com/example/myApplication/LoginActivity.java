@@ -40,18 +40,14 @@ public class LoginActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
 
-
+    FirebaseAuth.AuthStateListener authStateListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         firebaseAuth = FirebaseAuth.getInstance();
 
-        if(firebaseAuth.getCurrentUser() != null){
-            //start prof
-            finish();
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-        }
+
 
         sendOTP = findViewById(R.id.button);
         confirm = findViewById(R.id.button2);
@@ -59,6 +55,21 @@ public class LoginActivity extends AppCompatActivity {
         otp = findViewById(R.id.editText2);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        authStateListener=new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
+                if(user!=null)
+                {
+
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+
+
+            }
+        };
         onSendOTPClicked();
         onConfirmClicked();
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -215,6 +226,15 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        firebaseAuth.addAuthStateListener(authStateListener);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        firebaseAuth.addAuthStateListener(authStateListener);
+    }
 
 }

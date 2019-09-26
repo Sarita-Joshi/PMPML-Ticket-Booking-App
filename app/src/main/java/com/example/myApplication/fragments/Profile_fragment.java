@@ -1,6 +1,9 @@
 package com.example.myApplication.fragments;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +14,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.example.myApplication.AboutUs;
 import com.example.myApplication.LoginActivity;
 import com.example.myApplication.R;
 import com.example.myApplication.adapters.MyListAdapter;
@@ -104,6 +112,94 @@ public class Profile_fragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 // TODO Auto-generated method stub
                 String value=adapter.getItem(position);
+                switch (position)
+                {
+                    case 0: //Edit profile
+                    {
+                        Toast.makeText(getContext(),value,Toast.LENGTH_SHORT).show();
+
+                        break;
+                    }
+                    case 1: //My tickets
+                    {
+
+                        FragmentManager fragmentManager=getActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.main_frame,new Ticket_fragment());
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+                        Toast.makeText(getContext(),value,Toast.LENGTH_SHORT).show();
+
+                        break;
+                    }
+                    case 2: //Wallet
+                    {
+                        Toast.makeText(getContext(),value,Toast.LENGTH_SHORT).show();
+
+                        break;
+                    }
+                    case 3: //Password Settings
+                    {
+
+                        break;
+                    }
+                    case 4: //Call support
+                    {
+
+                        if (ContextCompat.checkSelfPermission(getActivity(),
+                                Manifest.permission.CALL_PHONE)
+                                != PackageManager.PERMISSION_GRANTED) {
+
+                            ActivityCompat.requestPermissions(getActivity(),
+                                    new String[]{Manifest.permission.CALL_PHONE},
+                                    101);
+
+                            // MY_PERMISSIONS_REQUEST_CALL_PHONE is an
+                            // app-defined int constant. The callback method gets the
+                            // result of the request.
+                        } else {
+                            //You already have permission
+                            try {
+                                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                                callIntent.setData(Uri.parse("tel:" + "9579716043"));//change the number
+                                startActivity(callIntent);
+                            } catch (SecurityException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        break;
+                    }
+                    case 5://Info fragment
+                    {
+                        FragmentManager fragmentManager=getActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.main_frame,new Help_fragment());
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+
+                        break;
+                    }
+                    case 6://report an issue
+                    {
+
+
+                        break;
+                    }
+                    case 7://about us
+                    {
+                        startActivity(new Intent(getActivity(), AboutUs.class));
+
+
+                        break;
+                    }
+
+
+                }
+
+
+
+
                 Toast.makeText(getContext(),value,Toast.LENGTH_SHORT).show();
 
             }
