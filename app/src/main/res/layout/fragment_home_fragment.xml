@@ -90,10 +90,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="10dp"
-            android:text="ticket kadhne"
-            android:textSize="14sp"
+            android:background="@drawable/button_style_1"
+            android:text="BOOK TICKET"
             android:textColor="@color/colorPrimary"
-            android:background="@drawable/button_style_1"/>
+            android:textSize="14sp" />
 
         <fragment
             android:id="@+id/map1"

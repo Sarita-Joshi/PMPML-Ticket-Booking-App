@@ -15,7 +15,9 @@
             android:layout_width="match_parent"
             android:layout_height="59dp"
             android:text="INFO SECTION"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
+            android:textAlignment="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,7 +34,7 @@
             <Spinner
                 android:id="@+id/souce_spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1" />
         </LinearLayout>
 
@@ -51,7 +53,7 @@
             <Spinner
                 android:id="@+id/dest_spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1" />
         </LinearLayout>
 
@@ -62,10 +64,10 @@
             android:text="Find Buses" />
 
         <ListView
-            android:id="@+id/bus_listview"
+            android:id="@+id/bus_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#00AD9A9A" />
+            android:layout_height="match_parent" />
 
     </LinearLayout>
+
 </RelativeLayout>

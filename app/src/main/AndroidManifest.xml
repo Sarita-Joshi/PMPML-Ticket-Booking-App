@@ -30,8 +30,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AboutUs"></activity>
-        <activity android:name=".UserDetails"></activity>
+        <activity android:name=".EditProfile"></activity>
+        <activity android:name=".ReportActivity" />
+        <activity android:name=".AboutUs" />
+        <activity android:name=".UserDetails" />
         <activity android:name=".codeScanner" />
         <activity
             android:name=".QRCodeScanner"
@@ -63,7 +65,6 @@
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="barcode" />
 
-        <activity android:name=".MapActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

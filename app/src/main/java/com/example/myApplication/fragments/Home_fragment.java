@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,11 +61,18 @@ public class Home_fragment extends Fragment
 EditText source, adult, children;
 Button btn;
 Spinner dest, bus_no;
-
+            double source_lat;
+            double source_lon;
+            double dest_lat;
+            double dest_lon;
 ArrayList<String> list;
 FirebaseUser mUser;
 FirebaseFirestore db;
 ProgressDialog pd;
+long adult_price=5;
+long child_price=5;
+long usertokens=0;
+long total=0;
 
     public Home_fragment()
     {}
@@ -103,7 +111,7 @@ ProgressDialog pd;
                                 switch (which){
                                     case DialogInterface.BUTTON_POSITIVE:
                                         //Yes button clicked
-                                        pd.show();
+                                        //pd.show();
                                         addToDB();
                                         break;
 
@@ -116,7 +124,7 @@ ProgressDialog pd;
                         };
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                        builder.setMessage("Total no of tokens:"+Long.toString(total) ).setPositiveButton("Yes", dialogClickListener)
                                 .setNegativeButton("No", dialogClickListener).show();
 
                     }
@@ -135,6 +143,22 @@ ProgressDialog pd;
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER) && !source.getText().toString().isEmpty()) {
                     bus_no.setEnabled(true);
+
+                    db.collection("Stop").document(source.getText().toString()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if(task.isSuccessful())
+                            {
+                                DocumentSnapshot documentSnapshot=task.getResult();
+                                source_lat=Double.parseDouble(documentSnapshot.get("Latitude").toString());
+                                source_lon=Double.parseDouble(documentSnapshot.get("Longitude").toString());
+                                Log.e(TAG,"lllllllllllllllllllllllllllllllllllllllll"+source_lat+source_lon);
+
+
+                            }
+                        }
+                    });
+
                     setBusNoSPinner(source.getText().toString());
                     return true;
                 }
@@ -244,12 +268,37 @@ ProgressDialog pd;
                     }
                 });
 
+        dest.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                           @Override
+                                           public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                                               db.collection("Stop").document(dest.getSelectedItem().toString()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                   @Override
+                                                   public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                       if (task.isSuccessful()) {
+                                                           DocumentSnapshot documentSnapshot = task.getResult();
+                                                           dest_lat = Double.parseDouble(documentSnapshot.get("Latitude").toString());
+                                                           dest_lon = Double.parseDouble(documentSnapshot.get("Longitude").toString());
+                                                           Log.e(TAG, "ppppppppppppppppppppppppppppppppppppppppp" + dest_lat + dest_lat);
+
+
+                                                       }
+                                                   }
+                                               });
+                                           }
+
+                                           @Override
+                                           public void onNothingSelected(AdapterView<?> adapterView) {
+
+                                           }
+                                       });
+
 
     }
 
     private void addToDB(){
 
-        final int total;
+//        int total;
         final Map<String,Object> map = new HashMap<>();
         map.put("source", source.getText().toString());
         map.put("destination", dest.getSelectedItem().toString());
@@ -264,42 +313,110 @@ ProgressDialog pd;
         map.put("ticketNo", "534");
         map.put("depot", "Manapa");
 
-        total = Integer.parseInt(adult.getText().toString()) *
-                + Integer.parseInt(children.getText().toString()) * 10;
-        map.put("total", total);
-        map.put("timestamp", FieldValue.serverTimestamp());
 
-        db.collection("User")
-                .document(mUser.getPhoneNumber()).collection("Ticket")
-                .document().set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+
+        Log.e(TAG,"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"+source_lat+source_lon+dest_lat+dest_lon);
+
+
+
+
+        double double_distance=distance(source_lat,source_lon,dest_lat,dest_lon,"K");
+
+        int int_distance=(int)double_distance;
+
+
+
+        if(int_distance%2!=0)
+        {
+            int q=(int)int_distance/2;
+            int_distance=2*(q+1);
+
+        }
+
+
+
+        db.collection("Price").whereEqualTo("KM",int_distance).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onSuccess(Void aVoid) {
-                showTicket((Timestamp) map.get("timestamp"));
-                //Toast.makeText(getActivity(), "Ticket kadhla!!",Toast.LENGTH_SHORT);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getActivity(), "Error" + e.getMessage(),Toast.LENGTH_SHORT);
-            }
-        });
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot doc : task.getResult()){
+                      //  Log.e(TAG,"zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"+ doc.get("full").toString());
 
-        map.clear();
-        //map.put("tokens",);
+                        if(doc!=null){
 
-        db.collection("User").document(mUser.getPhoneNumber()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                DocumentSnapshot document = task.getResult();
-                if(document!=null) {
-                    long t = (long) document.get("tokens");
-                    t = t - total;
-                    map.put("tokens", t);
-                    db.collection("User").document(mUser.getPhoneNumber()).update(map);
+                           adult_price = Long.parseLong(doc.get("full").toString());
+                           child_price = Long.parseLong(doc.get("half").toString());
+
+                            Log.e(TAG,"zzzzzzzzzzzzzzzzzzzzzzzzz"+ adult_price + child_price);
+
+                            total = Long.parseLong(adult.getText().toString()) *adult_price + Long.parseLong(children.getText().toString()) * child_price;
+
+                            Log.e(TAG,"dfsdsdfsdsdgsdgsdgdgsdgsgdsdgs"+ total);
+
+                            map.put("total", total);
+                            map.put("timestamp", FieldValue.serverTimestamp());
+
+
+                            db.collection("User").document(mUser.getPhoneNumber()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                                    DocumentSnapshot document = task.getResult();
+                                    if(document!=null) {
+                                        usertokens= (long) document.get("tokens");
+                                        if(usertokens>total)   //User has enough tokens
+                                        {
+                                            db.collection("User")
+                                                    .document(mUser.getPhoneNumber()).collection("Ticket")
+                                                    .document().set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    showTicket((Timestamp) map.get("timestamp"));
+                                                    //Toast.makeText(getActivity(), "Ticket kadhla!!",Toast.LENGTH_SHORT);
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Toast.makeText(getActivity(), "Error" + e.getMessage(),Toast.LENGTH_SHORT);
+                                                }
+                                            });
+
+                                            map.clear();
+                                            //map.put("tokens",);
+
+                                            db.collection("User").document(mUser.getPhoneNumber()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                                                    DocumentSnapshot document = task.getResult();
+                                                    if(document!=null) {
+                                                        long t = (long) document.get("tokens");
+                                                        t = t - total;
+                                                        map.put("tokens", t);
+                                                        db.collection("User").document(mUser.getPhoneNumber()).update(map);
+                                                    }
+                                                }
+                                            });
+                                        }
+                                        else  //User Doesnt have enough tokens
+                                        {
+
+                                            Toast.makeText(getActivity(),"Not Enough tokens",Toast.LENGTH_SHORT).show();
+
+                                        }
+
+                                    }
+                                }
+                            });
+
+
+                        }
+                    }
                 }
             }
         });
+
 
 
 
@@ -502,6 +619,8 @@ ProgressDialog pd;
 //        }
 //
 //
+
+
 
             
 }

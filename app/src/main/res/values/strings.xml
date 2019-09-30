@@ -20,6 +20,13 @@
         PMPML ticket booking app is made for the convenience of both the commuters and the conductor.
 
     </string>
+
+    <string name="qrreporttext">
+        Select the bus top whose qr code is missing/not scannable/not in good condition.
+    </string>
+    <string name="busreporttext">
+        Select the route you have an issue with.
+    </string>
     <string-array name="array_options">
         <item>Edit Profile</item>
         <item>My Tickets</item>

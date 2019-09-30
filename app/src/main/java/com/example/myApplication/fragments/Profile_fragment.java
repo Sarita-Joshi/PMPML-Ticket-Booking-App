@@ -21,11 +21,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.myApplication.AboutUs;
+import com.example.myApplication.EditProfile;
 import com.example.myApplication.LoginActivity;
 import com.example.myApplication.R;
+import com.example.myApplication.ReportActivity;
 import com.example.myApplication.adapters.MyListAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -53,6 +56,11 @@ public class Profile_fragment extends Fragment {
         FirebaseFirestore db=FirebaseFirestore.getInstance();
         DocumentReference docref=db.collection("User").document(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
         Source source=Source.CACHE;
+
+
+
+
+
 
         docref.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -116,6 +124,9 @@ public class Profile_fragment extends Fragment {
                 {
                     case 0: //Edit profile
                     {
+
+                        startActivity(new Intent(getActivity(), EditProfile.class));
+
                         Toast.makeText(getContext(),value,Toast.LENGTH_SHORT).show();
 
                         break;
@@ -123,12 +134,16 @@ public class Profile_fragment extends Fragment {
                     case 1: //My tickets
                     {
 
+                        BottomNavigationView navigationView =(BottomNavigationView) getActivity().findViewById(R.id.bottom_nav);
+                        navigationView.getMenu().getItem(1).setChecked(true);
                         FragmentManager fragmentManager=getActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.main_frame,new Ticket_fragment());
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
                         Toast.makeText(getContext(),value,Toast.LENGTH_SHORT).show();
+
+
 
                         break;
                     }
@@ -172,17 +187,21 @@ public class Profile_fragment extends Fragment {
                     }
                     case 5://Info fragment
                     {
+                        BottomNavigationView navigationView =(BottomNavigationView) getActivity().findViewById(R.id.bottom_nav);
+                        navigationView.getMenu().getItem(2).setChecked(true);
                         FragmentManager fragmentManager=getActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.main_frame,new Help_fragment());
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
 
+
+
                         break;
                     }
                     case 6://report an issue
                     {
-
+                        startActivity(new Intent(getActivity(), ReportActivity.class));
 
                         break;
                     }
