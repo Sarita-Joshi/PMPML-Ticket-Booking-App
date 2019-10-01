@@ -373,7 +373,7 @@ double source_lat=0,source_lon=0,dest_lat=0,dest_lon=0;
                                 .document().set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                showTicket((Timestamp) map.get("timestamp"));
+                                //showTicket((Timestamp) map.get("timestamp"));
                                 //Toast.makeText(getActivity(), "Ticket kadhla!!",Toast.LENGTH_SHORT);
                             }
                         }).addOnFailureListener(new OnFailureListener() {

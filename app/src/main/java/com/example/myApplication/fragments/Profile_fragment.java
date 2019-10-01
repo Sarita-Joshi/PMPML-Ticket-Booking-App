@@ -6,6 +6,9 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -23,6 +26,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.myApplication.AboutUs;
 import com.example.myApplication.EditProfile;
 import com.example.myApplication.LoginActivity;
+import com.example.myApplication.MainActivity;
 import com.example.myApplication.payment.PaymentActivity;
 import com.example.myApplication.R;
 import com.example.myApplication.ReportActivity;
@@ -51,7 +55,7 @@ public class Profile_fragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View v=inflater.inflate(R.layout.fragment_profile_fragment,container,false);
-
+        setHasOptionsMenu(true);
 
         listView=(ListView)v.findViewById(R.id.options);
 
@@ -252,5 +256,29 @@ public class Profile_fragment extends Fragment {
 //Call signOut()
         firebaseAuth.signOut();
     }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.main, menu);
+    }
+
+    //handle option clicks
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_logout:
+                FirebaseAuth.getInstance().signOut();
+                getActivity().finish();
+                startActivity(new Intent(getActivity(), LoginActivity.class));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }

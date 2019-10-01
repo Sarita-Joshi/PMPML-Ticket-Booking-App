@@ -10,6 +10,8 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,7 +21,14 @@ import com.example.myApplication.R;
 import com.example.myApplication.classes.Ticket;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.ref.WeakReference;
 
@@ -66,6 +75,8 @@ public class TicketAdapter extends FirestoreRecyclerAdapter<Ticket, TicketAdapte
 
         TextView source,destination,busNo,ticketNo,tripNo,people,timestsmp,depot,total,
                 tv;
+        RelativeLayout viewForeground;
+        RelativeLayout viewBackground;
         private WeakReference<ClickListener> listenerRef;
 
         public TicketHolder(View v, ClickListener listener){
@@ -73,7 +84,8 @@ public class TicketAdapter extends FirestoreRecyclerAdapter<Ticket, TicketAdapte
             listenerRef = new WeakReference<>(listener);
             v.setOnClickListener(this);
 
-
+            viewBackground = v.findViewById(R.id.view_background);
+            viewForeground = v.findViewById(R.id.view_foreground);
             source = v.findViewById(R.id.textView_source);
             destination = v.findViewById(R.id.textView_destination);
             busNo = v.findViewById(R.id.textView_ticket_bus_no);
@@ -168,6 +180,38 @@ public class TicketAdapter extends FirestoreRecyclerAdapter<Ticket, TicketAdapte
         view.startAnimation(fadeIn);
         view.startAnimation(fadeOut);
 
+    }
+
+    public void deleteItem(int position) {
+
+        Ticket ticket = getItem(position);
+        FirebaseFirestore.getInstance().collection("User")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
+                .collection("Ticket").whereEqualTo("timestamp" , ticket.getTimestamp())
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                   for(QueryDocumentSnapshot documentSnapshots : task.getResult()){
+
+                       FirebaseFirestore.getInstance().collection("User")
+                               .document(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
+                               .collection("Ticket").document(documentSnapshots.getId()).delete();
+                   }
+                }
+            }
+        });
+        // notify the item removed by position
+        // to perform recycler view delete animations
+        // NOTE: don't call notifyDataSetChanged()
+        notifyItemRemoved(position);
+    }
+
+    public void deleteAll() {
+
+        while(getItemCount()>0){
+            deleteItem(0);
+        }
     }
 
 
