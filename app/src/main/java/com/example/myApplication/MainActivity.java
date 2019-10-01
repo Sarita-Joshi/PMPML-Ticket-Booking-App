@@ -33,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.e("fragments", "oncreate");
-        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"white\">" + getString(R.string.app_name) + "</font>"));
-        botnavview=(BottomNavigationView)findViewById(R.id.bottom_nav);
+       // getSupportActionBar().setTitle(Html.fromHtml("<font color=\"white\">" + getString(R.string.app_name) + "</font>"));
+        botnavview=findViewById(R.id.bottom_nav);
         home_fragment=new Home_fragment();
         ticket_fragment=new Ticket_fragment();
         help_fragment=new Help_fragment();

@@ -4,10 +4,14 @@
 
 package com.example.myApplication.fragments;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,11 +30,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+
 
 import com.example.myApplication.R;
 import com.example.myApplication.classes.Ticket;
 import com.example.myApplication.adapters.TicketAdapter;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,6 +56,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,20 +65,18 @@ import java.util.Map;
 
 
 public class Home_fragment extends Fragment
-        //implements OnMapReadyCallback, LocationListener, GoogleMap.OnPolylineClickListener
+        implements OnMapReadyCallback
+        //, GoogleMap.OnPolylineClickListener
         {
 
     private static final String TAG = "MyActivity";
-//    private Location currentLocation;
-//    private FusedLocationProviderClient fusedLocationProviderClient;
+    private Location currentLocation;
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
 EditText source, adult, children;
 Button btn;
 Spinner dest, bus_no;
-            double source_lat;
-            double source_lon;
-            double dest_lat;
-            double dest_lon;
+
 ArrayList<String> list;
 FirebaseUser mUser;
 FirebaseFirestore db;
@@ -72,11 +84,11 @@ ProgressDialog pd;
 long adult_price=5;
 long child_price=5;
 long usertokens=0;
-long total=0;
+int total=0;
+double source_lat=0,source_lon=0,dest_lat=0,dest_lon=0;
 
     public Home_fragment()
     {}
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -97,21 +109,21 @@ long total=0;
                 db = FirebaseFirestore.getInstance();
                 pd = new ProgressDialog(getContext());
 
-                //fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-                //setUpMap();
 
                 sourceTextWatcher();
+
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
+                        calculateTotal();
                         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 switch (which){
                                     case DialogInterface.BUTTON_POSITIVE:
                                         //Yes button clicked
-                                        //pd.show();
+                                       // pd.show();
                                         addToDB();
                                         break;
 
@@ -135,8 +147,46 @@ long total=0;
         return v;
     }
 
-    private void sourceTextWatcher() {
+    private void calculateTotal() {
 
+                double double_distance = distance(source_lat, source_lon, dest_lat, dest_lon, "K");
+
+                int int_distance = (int) double_distance;
+
+                if (int_distance % 2 != 0) {
+                    int q = (int) int_distance / 2;
+                    int_distance = 2 * (q + 1);
+
+                }
+
+
+                db.collection("Price").whereEqualTo("KM", int_distance).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                //  Log.e(TAG,"zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"+ doc.get("full").toString());
+
+                                if (doc != null) {
+
+                                    adult_price = Long.parseLong(doc.get("full").toString());
+                                    child_price = Long.parseLong(doc.get("half").toString());
+
+                                    Log.e(TAG, "zzzzzzzzzzzzzzzzzzzzzzzzz" + adult_price + child_price);
+
+                                    total = (int) (Integer.parseInt(adult.getText().toString()) * adult_price + Integer.parseInt(children.getText().toString()) * child_price);
+
+                                    Log.e(TAG, "dfsdsdfsdsdgsdgsdgdgsdgsgdsdgs" + total);
+
+                                }
+                            }
+                        }
+                    }
+                });
+
+            }
+
+    private void sourceTextWatcher() {
         source.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 // If the event is a key-down event on the "enter" button
@@ -158,7 +208,6 @@ long total=0;
                             }
                         }
                     });
-
                     setBusNoSPinner(source.getText().toString());
                     return true;
                 }
@@ -168,10 +217,7 @@ long total=0;
 
         source.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if(bus_no.isEnabled()){
@@ -181,17 +227,15 @@ long total=0;
                     dest.setEnabled(false);
                 }
             }
-
-
             @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
+            public void afterTextChanged(Editable editable) {}
         });
+
     }
 
     private void setBusNoSPinner(String str) {
 
+        int t = 0;
         final List<String> list_of_bus_no = new ArrayList<>();
         list_of_bus_no.add("Select bus number");
 
@@ -224,7 +268,7 @@ long total=0;
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i==0) {return;}
-                setDestSpinnerList(bus_no.getSelectedItem().toString());
+                 setDestSpinnerList(bus_no.getSelectedItem().toString());
                 dest.setEnabled(true);
             }
 
@@ -234,10 +278,12 @@ long total=0;
             }
         });
 
+
     }
 
-    private void setDestSpinnerList(String str) {
+    private int  setDestSpinnerList(String str) {
 
+        int t= 0;
         list = new ArrayList<String>();
         list.add("Select destination");
         db.collection("Route").document(str).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -269,210 +315,135 @@ long total=0;
                 });
 
         dest.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                           @Override
-                                           public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+           @Override
+           public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                                               db.collection("Stop").document(dest.getSelectedItem().toString()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                   @Override
-                                                   public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                       if (task.isSuccessful()) {
-                                                           DocumentSnapshot documentSnapshot = task.getResult();
-                                                           dest_lat = Double.parseDouble(documentSnapshot.get("Latitude").toString());
-                                                           dest_lon = Double.parseDouble(documentSnapshot.get("Longitude").toString());
-                                                           Log.e(TAG, "ppppppppppppppppppppppppppppppppppppppppp" + dest_lat + dest_lat);
+               db.collection("Stop").document(dest.getSelectedItem().toString()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                   @Override
+                   public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                       if (task.isSuccessful()) {
+                           DocumentSnapshot documentSnapshot = task.getResult();
+                           dest_lat = Double.parseDouble(documentSnapshot.get("Latitude").toString());
+                           dest_lon = Double.parseDouble(documentSnapshot.get("Longitude").toString());
+                           Log.e(TAG, "ppppppppppppppppppppppppppppppppppppppppp" + dest_lat + dest_lat);
 
 
-                                                       }
-                                                   }
-                                               });
-                                           }
+                       }
+                   }
+               });
+           }
 
-                                           @Override
-                                           public void onNothingSelected(AdapterView<?> adapterView) {
+           @Override
+           public void onNothingSelected(AdapterView<?> adapterView) {
 
-                                           }
-                                       });
+           }
+       });
 
+        return t;
 
     }
 
-    private void addToDB(){
+    private void addToDB() {
 
-//        int total;
-        final Map<String,Object> map = new HashMap<>();
+        final Map<String, Object> map = new HashMap<>();
         map.put("source", source.getText().toString());
         map.put("destination", dest.getSelectedItem().toString());
         map.put("busNo", bus_no.getSelectedItem().toString());
-
         ArrayList<Integer> list = new ArrayList<>();
         list.add(Integer.parseInt(adult.getText().toString()));
         list.add(Integer.parseInt(children.getText().toString()));
         map.put("people", list);
-
         map.put("tripNo", "5");
         map.put("ticketNo", "534");
         map.put("depot", "Manapa");
+        map.put("total", total);
+        map.put("timestamp", FieldValue.serverTimestamp());
 
-
-
-        Log.e(TAG,"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"+source_lat+source_lon+dest_lat+dest_lon);
-
-
-
-
-        double double_distance=distance(source_lat,source_lon,dest_lat,dest_lon,"K");
-
-        int int_distance=(int)double_distance;
-
-
-
-        if(int_distance%2!=0)
-        {
-            int q=(int)int_distance/2;
-            int_distance=2*(q+1);
-
-        }
-
-
-
-        db.collection("Price").whereEqualTo("KM",int_distance).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("User").document(mUser.getPhoneNumber()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot doc : task.getResult()){
-                      //  Log.e(TAG,"zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"+ doc.get("full").toString());
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                        if(doc!=null){
+                DocumentSnapshot document = task.getResult();
+                if (document != null) {
+                    usertokens = (long) document.get("tokens");
+                    if (usertokens > total)   //User has enough tokens
+                    {
+                        db.collection("User")
+                                .document(mUser.getPhoneNumber()).collection("Ticket")
+                                .document().set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                showTicket((Timestamp) map.get("timestamp"));
+                                //Toast.makeText(getActivity(), "Ticket kadhla!!",Toast.LENGTH_SHORT);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(getActivity(), "Error" + e.getMessage(), Toast.LENGTH_SHORT);
+                            }
+                        });
 
-
-                           adult_price = Long.parseLong(doc.get("full").toString());
-                           child_price = Long.parseLong(doc.get("half").toString());
-
-                            Log.e(TAG,"zzzzzzzzzzzzzzzzzzzzzzzzz"+ adult_price + child_price);
-
-                            total = Long.parseLong(adult.getText().toString()) *adult_price + Long.parseLong(children.getText().toString()) * child_price;
-
-                            Log.e(TAG,"dfsdsdfsdsdgsdgsdgdgsdgsgdsdgs"+ total);
-
-                            map.put("total", total);
-                            map.put("timestamp", FieldValue.serverTimestamp());
-
-
-                            db.collection("User").document(mUser.getPhoneNumber()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                                    DocumentSnapshot document = task.getResult();
-                                    if(document!=null) {
-                                        usertokens= (long) document.get("tokens");
-                                        if(usertokens>total)   //User has enough tokens
-                                        {
-                                            db.collection("User")
-                                                    .document(mUser.getPhoneNumber()).collection("Ticket")
-                                                    .document().set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    showTicket((Timestamp) map.get("timestamp"));
-                                                    //Toast.makeText(getActivity(), "Ticket kadhla!!",Toast.LENGTH_SHORT);
-                                                }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Toast.makeText(getActivity(), "Error" + e.getMessage(),Toast.LENGTH_SHORT);
-                                                }
-                                            });
-
-                                            map.clear();
-                                            //map.put("tokens",);
-
-                                            db.collection("User").document(mUser.getPhoneNumber()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                                                    DocumentSnapshot document = task.getResult();
-                                                    if(document!=null) {
-                                                        long t = (long) document.get("tokens");
-                                                        t = t - total;
-                                                        map.put("tokens", t);
-                                                        db.collection("User").document(mUser.getPhoneNumber()).update(map);
-                                                    }
-                                                }
-                                            });
-                                        }
-                                        else  //User Doesnt have enough tokens
-                                        {
-
-                                            Toast.makeText(getActivity(),"Not Enough tokens",Toast.LENGTH_SHORT).show();
-
-                                        }
-
-                                    }
-                                }
-                            });
-
-
-                        }
+                        db.collection("User").document(mUser.getPhoneNumber())
+                                .update("tokens", FieldValue.increment(-1*total));
                     }
                 }
             }
         });
-
-
-
-
     }
 
     private void showTicket(Timestamp time) {
 
-        pd.dismiss();
+       // pd.dismiss();
         db.collection("User").document(mUser.getPhoneNumber()).collection("Ticket").whereEqualTo("timestamp",time)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 Ticket model;
-                for(QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                     model = documentSnapshot.toObject(Ticket.class);
-                    final Dialog dialog = new Dialog(getContext());
-                    dialog.setContentView(R.layout.ticket_template);
-                    Window window = dialog.getWindow();
-                    window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                        if(!documentSnapshot.exists()) return;
+                        model = documentSnapshot.toObject(Ticket.class);
+                        final Dialog dialog = new Dialog(getContext());
+                        dialog.setContentView(R.layout.ticket_template);
+                        Window window = dialog.getWindow();
+                        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-                    TextView source,destination,busNo,ticketNo,tripNo,people,timestsmp,depot,total,
-                            tv;
+                        TextView source, destination, busNo, ticketNo, tripNo, people, timestsmp, depot, total,
+                                tv;
+                        source = dialog.findViewById(R.id.textView_source);
+                        destination = dialog.findViewById(R.id.textView_destination);
+                        busNo = dialog.findViewById(R.id.textView_ticket_bus_no);
+                        ticketNo = dialog.findViewById(R.id.textView_ticket_no);
+                        tripNo = dialog.findViewById(R.id.textView_trip_no);
+                        people = dialog.findViewById(R.id.textView_number_of_people);
+                        timestsmp = dialog.findViewById(R.id.textView_timestamp);
+                        depot = dialog.findViewById(R.id.textView_depot_name);
+                        total = dialog.findViewById(R.id.textView_total_amount);
+                        tv = dialog.findViewById(R.id.title);
 
-                    source = dialog.findViewById(R.id.textView_source);
-                    destination = dialog.findViewById(R.id.textView_destination);
-                    busNo = dialog.findViewById(R.id.textView_ticket_bus_no);
-                    ticketNo = dialog.findViewById(R.id.textView_ticket_no);
-                    tripNo = dialog.findViewById(R.id.textView_trip_no);
-                    people = dialog.findViewById(R.id.textView_number_of_people);
-                    timestsmp = dialog.findViewById(R.id.textView_timestamp);
-                    depot = dialog.findViewById(R.id.textView_depot_name);
-                    total = dialog.findViewById(R.id.textView_total_amount);
-                    tv = dialog.findViewById(R.id.title);
+                        source.setText(model.getSource());
+                        depot.setText(model.getDepot());
+                        destination.setText(model.getDestination());
+                        busNo.setText(model.getBusNo());
+                        tripNo.setText(model.getTripNo());
+                        timestsmp.setText(model.getTimestamp().toDate().toString());
+                        ticketNo.setText(model.getTicketNo());
+                        people.setText(model.getPeople());
+                        total.setText(String.valueOf(model.getTotal()));
+                        TicketAdapter.fadeInAnimation(tv);
 
-                    source.setText(model.getSource());
-                    depot.setText(model.getDepot());
-                    destination.setText(model.getDestination());
-                    busNo.setText(model.getBusNo());
-                    tripNo.setText(model.getTripNo());
-                    timestsmp.setText(model.getTimestamp().toDate().toString());
-                    ticketNo.setText(model.getTicketNo());
-                    people.setText(model.getPeople());
-                    total.setText(String.valueOf(model.getTotal()));
-                    TicketAdapter.fadeInAnimation(tv);
+                        dialog.show();
 
-                    dialog.show();
+                        break;
 
-                    break;
-
+                    }
                 }
             }
         });
 
     }
 
-            private static double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
+    private static double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
                 if ((lat1 == lat2) && (lon1 == lon2)) {
                     return 0;
                 }
@@ -491,54 +462,53 @@ long total=0;
                 }
             }
 
+    private void setUpMap() {
 
+        if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(getActivity(),new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION},101);
+            return;
+        }
 
+        Task<Location> task = fusedLocationProviderClient.getLastLocation();
+        task.addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if(location!=null){
+                    currentLocation = location;
 
+                    SupportMapFragment supportMapFragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map1);
+                    if(supportMapFragment!=null)
+                    supportMapFragment.getMapAsync(Home_fragment.this);
+                }else{
+                    Toast.makeText(getActivity(), "loc null",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
 
-//    private void setUpMap() {
-//
-//        if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-//            ActivityCompat.requestPermissions(getActivity(),new String[]{
-//                    Manifest.permission.ACCESS_FINE_LOCATION},101);
-//            return;
-//        }
-//
-//        Task<Location> task = fusedLocationProviderClient.getLastLocation();
-//        task.addOnSuccessListener(new OnSuccessListener<Location>() {
-//            @Override
-//            public void onSuccess(Location location) {
-//                if(location!=null){
-//                    currentLocation = location;
-//                    Map<String, Object> city = new HashMap<>();
-//                    city.put("Lon", currentLocation.getLongitude());
-//                    city.put("Lat", currentLocation.getLatitude());
-//
-//                    db.collection("User").document(mUser.getPhoneNumber())
-//                            .set(city, SetOptions.merge())
-//                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                @Override
-//                                public void onSuccess(Void aVoid) {
-//                                    Log.d(TAG, "DocumentSnapshot successfully written!");
-//                                }
-//                            })
-//                            .addOnFailureListener(new OnFailureListener() {
-//                                @Override
-//                                public void onFailure(@NonNull Exception e) {
-//                                    Log.w(TAG, "Error writing document", e);
-//                                }
-//                            });
-//
-//                    SupportMapFragment supportMapFragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map1);
-//                    if(supportMapFragment!=null)
-//                    supportMapFragment.getMapAsync(Home_fragment.this);
-//                }else{
-//                    Toast.makeText(getActivity(), "loc null",Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-//    }
-//
-//
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+        LatLng latLng = new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(latLng)
+                .title("You are here.");
+        googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,15));
+        googleMap.addMarker(markerOptions);
+
+        }
+
+//        Polyline polyline1 = googleMap.addPolyline(new PolylineOptions()
+//                .clickable(true)
+//                .add(
+//                        new LatLng(-35.016, 143.321),
+//                        new LatLng(-34.747, 145.592),
+//                        new LatLng(-34.364, 147.891),
+//                        new LatLng(-33.501, 150.217),
+//                        new LatLng(-32.306, 149.248),
+//                        new LatLng(-32.491, 147.309)));
 //
 //    @Override
 //    public void onMapReady(GoogleMap googleMap) {
@@ -620,7 +590,6 @@ long total=0;
 //
 //
 
-
-
-            
 }
+
+

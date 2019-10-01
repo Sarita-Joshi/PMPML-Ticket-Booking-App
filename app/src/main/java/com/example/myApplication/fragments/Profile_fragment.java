@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.myApplication.AboutUs;
 import com.example.myApplication.EditProfile;
 import com.example.myApplication.LoginActivity;
+import com.example.myApplication.payment.PaymentActivity;
 import com.example.myApplication.R;
 import com.example.myApplication.ReportActivity;
 import com.example.myApplication.adapters.MyListAdapter;
@@ -40,6 +41,7 @@ public class Profile_fragment extends Fragment {
 
     ListView listView;
     String[] listItem;
+    String t;
 
     public Profile_fragment()
     {}
@@ -82,6 +84,7 @@ public class Profile_fragment extends Fragment {
                         int tokens1=document.getLong("tokens").intValue();
 
                         tokens.setText("Balance : " + Integer.toString(tokens1));
+                        t = tokens.getText().toString();
                         phone.setText(document.getId());
                     }
                 }
@@ -114,11 +117,10 @@ public class Profile_fragment extends Fragment {
         listItem = getResources().getStringArray(R.array.array_options);
         final MyListAdapter adapter=new MyListAdapter(getActivity(), listItem);
         listView.setAdapter(adapter);
-
+        listView.setMinimumHeight(320);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                // TODO Auto-generated method stub
                 String value=adapter.getItem(position);
                 switch (position)
                 {
@@ -150,6 +152,9 @@ public class Profile_fragment extends Fragment {
                     case 2: //Wallet
                     {
                         Toast.makeText(getContext(),value,Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getActivity(), PaymentActivity.class);
+                        intent.putExtra("balance", t);
+                        startActivity(intent);
 
                         break;
                     }
@@ -219,7 +224,7 @@ public class Profile_fragment extends Fragment {
 
 
 
-                Toast.makeText(getContext(),value,Toast.LENGTH_SHORT).show();
+
 
             }
         });

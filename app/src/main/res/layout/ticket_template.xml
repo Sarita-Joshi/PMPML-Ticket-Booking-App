@@ -42,7 +42,8 @@
             android:orientation="horizontal"
             android:layout_gravity="center_horizontal"
             android:paddingStart="5dp"
-            android:paddingEnd="5dp">
+            android:paddingEnd="5dp"
+            android:layout_marginBottom="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -61,8 +62,7 @@
                     android:text="PUNE STATION"
                     android:layout_gravity="center_horizontal"
                     android:layout_weight="1"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:layout_marginBottom="15dp"/>
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
 
         </LinearLayout>
 
@@ -77,19 +77,20 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_gravity="center_horizontal"
+                        android:orientation="vertical"
                         android:layout_weight="1">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="TICKET NO : "/>
+                            android:layout_gravity="center_horizontal"
+                            android:text="TICKET NO"/>
 
                         <TextView
                             android:id="@+id/textView_ticket_no"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="trip"
+                            android:layout_gravity="center_horizontal"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textStyle="bold"/>
                     </LinearLayout>
@@ -97,18 +98,19 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_gravity="center_horizontal"
+                        android:orientation="vertical"
                         android:layout_weight="1">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="BUS NO : "/>
+                        android:layout_gravity="center_horizontal"
+                        android:text="BUS NO"/>
 
                 <TextView
                     android:id="@+id/textView_ticket_bus_no"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textStyle="bold"
                     android:text="bus"/>
@@ -118,19 +120,20 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_gravity="center_horizontal"
+                        android:orientation="vertical"
                         android:layout_weight="1"
                         android:layout_marginStart="15dp">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TRIP NO : "/>
+                        android:layout_gravity="center_horizontal"
+                        android:text="TRIP NO"/>
 
                 <TextView
                     android:id="@+id/textView_trip_no"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:text="trip"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textStyle="bold"/>
@@ -190,8 +193,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_gravity="center_horizontal"
-                    android:paddingStart="15dp"
-                    android:paddingEnd="15dp">
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -257,14 +260,7 @@
 
                 </RelativeLayout>
 
-
-
-
             </LinearLayout>
-
-
-
-
 
            </RelativeLayout>
 

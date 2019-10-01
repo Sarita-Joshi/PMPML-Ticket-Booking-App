@@ -45,14 +45,9 @@ public class TicketAdapter extends FirestoreRecyclerAdapter<Ticket, TicketAdapte
 
 
         holder.source.setText(model.getSource() + " to");
-        //holder.depot.setText(model.getDepot());
         holder.destination.setText(model.getDestination());
         holder.busNo.setText(model.getBusNo());
-        //holder.tripNo.setText(model.getTripNo());
-//        holder.timestsmp.setText(model.getTimestamp().toDate().toString());
-//        holder.ticketNo.setText(model.getTicketNo());
-        //holder.people.setText(model.getPeople());
-        holder.total.setText(String.valueOf(model.getTotal()));
+        holder.total.setText(" " + model.getTotal());
 
         Log.e("Ticket", "bindviewholder");
 
@@ -83,13 +78,8 @@ public class TicketAdapter extends FirestoreRecyclerAdapter<Ticket, TicketAdapte
             destination = v.findViewById(R.id.textView_destination);
             busNo = v.findViewById(R.id.textView_ticket_bus_no);
             ticketNo = v.findViewById(R.id.textView_ticket_no);
-//            tripNo = v.findViewById(R.id.textView_trip_no);
-//            people = v.findViewById(R.id.textView_number_of_people);
             timestsmp = v.findViewById(R.id.textView_timestamp);
-//            depot = v.findViewById(R.id.textView_depot_name);
             total = v.findViewById(R.id.textView_total_amount);
-//            tv = v.findViewById(R.id.title);
-
             Log.e("Ticket", "holder constr");
 
 
@@ -103,6 +93,7 @@ public class TicketAdapter extends FirestoreRecyclerAdapter<Ticket, TicketAdapte
             Log.e("ON CLICK",   "item clicked" + TicketAdapter.this.getItem(getAdapterPosition()));
 
             final Dialog dialog = new Dialog(view.getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.ticket_template);
             Window window = dialog.getWindow();
             window.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -126,10 +117,10 @@ public class TicketAdapter extends FirestoreRecyclerAdapter<Ticket, TicketAdapte
             destination.setText(model.getDestination());
             busNo.setText(model.getBusNo());
             tripNo.setText(model.getTripNo());
-            timestsmp.setText(model.getTimestamp().toDate().toString());
+            timestsmp.setText(model.getTimestamp().toDate().toLocaleString());
             ticketNo.setText(model.getTicketNo());
             people.setText(model.getPeople());
-            total.setText(String.valueOf(model.getTotal()));
+            total.setText(String.valueOf(model.getTotal()) +".00");
             fadeInAnimation(tv);
 
             dialog.show();
