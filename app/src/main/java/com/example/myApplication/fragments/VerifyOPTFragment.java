@@ -87,6 +87,7 @@ public class VerifyOPTFragment extends Fragment {
         //otp = v.findViewById(R.id.OTP);
         backButton = v.findViewById(R.id.back_button);
         firebaseAuth = FirebaseAuth.getInstance();
+        pinView = v.findViewById(R.id.firstPinView);
 
         if(firebaseAuth.getCurrentUser() != null){
             //start prof
@@ -166,7 +167,7 @@ public class VerifyOPTFragment extends Fragment {
     }
 
     private void setPinView(View v) {
-        final PinView pinView = v.findViewById(R.id.firstPinView);
+
         pinView.setTextColor(
                 ResourcesCompat.getColor(getResources(), R.color.colorAccent, getActivity().getTheme()));
         pinView.setTextColor(

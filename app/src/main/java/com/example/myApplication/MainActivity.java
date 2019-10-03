@@ -12,6 +12,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myApplication.fragments.Help_fragment;
 import com.example.myApplication.fragments.Home_fragment;
@@ -19,6 +22,8 @@ import com.example.myApplication.fragments.Profile_fragment;
 import com.example.myApplication.fragments.Ticket_fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     Ticket_fragment ticket_fragment;
     Help_fragment help_fragment;
     Profile_fragment profile_fragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         ticket_fragment=new Ticket_fragment();
         help_fragment=new Help_fragment();
         profile_fragment=new Profile_fragment();
-
         setFragment(home_fragment);
         Log.e("fragments", "oncreate");
         botnavview.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -73,6 +78,60 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    //@Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == 0) {
+//
+//            if (resultCode == RESULT_OK) {
+//                String contents = data.getStringExtra("SCAN_RESULT");
+//                Toast.makeText(this, "Qr success",Toast.LENGTH_SHORT).show();
+//                home_fragment.setTextViewText(contents);
+//                Log.d("Fragment", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"+contents);
+//
+//
+//
+//
+//            }
+//            if(resultCode == RESULT_CANCELED){
+//
+//
+//
+//                Log.d("Fragment", "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111");
+//                home_fragment.setTextViewText("Noooo");
+//                Toast.makeText(this, "Qr fail",Toast.LENGTH_SHORT).show();
+//
+//                //handle cancel
+//            }
+//        }
+//    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null) {
+            if(result.getContents() == null) {
+                Log.e("Scan*******", "Cancelled scan");
+
+            } else {
+                Log.e("Scan", "Scanned");
+
+
+                String qrstring=result.getContents().toString();
+
+                String[] values=qrstring.split(",");
+
+                home_fragment.setTextViewText(values[0]);
+                home_fragment.setdirection(Integer.parseInt(values[1]));
+                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+            }
+        } else {
+            // This is important, otherwise the result will not be passed to the fragment
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private void setFragment(Fragment f)

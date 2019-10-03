@@ -1,7 +1,5 @@
 
 
-
-
 package com.example.myApplication.fragments;
 
 import android.Manifest;
@@ -57,6 +55,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,9 +72,10 @@ public class Home_fragment extends Fragment
     private Location currentLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
-EditText source, adult, children;
-Button btn;
+EditText adult, children;
+Button btn,source_btn;
 Spinner dest, bus_no;
+TextView source;
 
 ArrayList<String> list;
 FirebaseUser mUser;
@@ -86,6 +86,9 @@ long child_price=5;
 long usertokens=0;
 int total=0;
 double source_lat=0,source_lon=0,dest_lat=0,dest_lon=0;
+int direction=0;
+
+
 
     public Home_fragment()
     {}
@@ -97,7 +100,7 @@ double source_lat=0,source_lon=0,dest_lat=0,dest_lon=0;
          View v=inflater.inflate(R.layout.fragment_home_fragment,container,false);
 
 
-                source=(EditText)v.findViewById(R.id.source);
+                source=v.findViewById(R.id.source);
                 adult=(EditText)v.findViewById(R.id.adults);
                 children=(EditText)v.findViewById(R.id.children);
                 dest = v.findViewById(R.id.spinner2);
@@ -108,7 +111,7 @@ double source_lat=0,source_lon=0,dest_lat=0,dest_lon=0;
                 mUser = FirebaseAuth.getInstance().getCurrentUser();
                 db = FirebaseFirestore.getInstance();
                 pd = new ProgressDialog(getContext());
-
+                source_btn=v.findViewById(R.id.button_source);
 
                 sourceTextWatcher();
 
@@ -141,6 +144,23 @@ double source_lat=0,source_lon=0,dest_lat=0,dest_lon=0;
 
                     }
                 });
+
+                source_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        IntentIntegrator integrator=new IntentIntegrator(getActivity());
+                        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+                        integrator.setPrompt("Scan");
+                        integrator.setCameraId(0);
+                        integrator.setBeepEnabled(true);
+                        integrator.setBarcodeImageEnabled(false);
+                        integrator.initiateScan();
+                    }
+                });
+
+
+
+
 
 
 
@@ -187,49 +207,6 @@ double source_lat=0,source_lon=0,dest_lat=0,dest_lon=0;
             }
 
     private void sourceTextWatcher() {
-        source.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                // If the event is a key-down event on the "enter" button
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER) && !source.getText().toString().isEmpty()) {
-                    bus_no.setEnabled(true);
-
-                    db.collection("Stop").document(source.getText().toString()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if(task.isSuccessful())
-                            {
-                                DocumentSnapshot documentSnapshot=task.getResult();
-                                source_lat=Double.parseDouble(documentSnapshot.get("Latitude").toString());
-                                source_lon=Double.parseDouble(documentSnapshot.get("Longitude").toString());
-                                Log.e(TAG,"lllllllllllllllllllllllllllllllllllllllll"+source_lat+source_lon);
-
-
-                            }
-                        }
-                    });
-                    setBusNoSPinner(source.getText().toString());
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        source.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(bus_no.isEnabled()){
-                    bus_no.setAdapter(null);
-                    bus_no.setEnabled(false);
-                    dest.setAdapter(null);
-                    dest.setEnabled(false);
-                }
-            }
-            @Override
-            public void afterTextChanged(Editable editable) {}
-        });
 
     }
 
@@ -249,8 +226,14 @@ double source_lat=0,source_lon=0,dest_lat=0,dest_lon=0;
                     return;
                 }
                 for(DocumentSnapshot doc : documentSnapshot){
+
                     list_of_bus_no.add(doc.getId());
                 }
+
+
+
+
+
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
                         android.R.layout.simple_list_item_1,
                         list_of_bus_no);
@@ -295,12 +278,31 @@ double source_lat=0,source_lon=0,dest_lat=0,dest_lon=0;
                 }
                 list = (ArrayList<String>)documentSnapshot.get("stopsequence");
 
-                for(int i=1;;){
-                    if(!list.get(i).equals(source.getText().toString()))
-                    list.remove(i);
-                    else
-                        break;
+
+                if(direction==0)
+                {
+                    int index=list.indexOf(source.getText().toString());
+
+                    for(int i=index; i<list.size();)
+                    {
+                        list.remove(i);
+                    }
                 }
+
+                else if(direction==1)
+                {
+
+                    for(int i=1;;){
+
+                        if(!list.get(i).equals(source.getText().toString()))
+                            list.remove(i);
+                        else
+                            break;
+                    }
+
+                }
+
+
 
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
                         android.R.layout.simple_spinner_item,
@@ -366,6 +368,9 @@ double source_lat=0,source_lon=0,dest_lat=0,dest_lon=0;
                 DocumentSnapshot document = task.getResult();
                 if (document != null) {
                     usertokens = (long) document.get("tokens");
+
+                    Toast.makeText(getActivity(),Long.toString(usertokens), Toast.LENGTH_SHORT);
+
                     if (usertokens > total)   //User has enough tokens
                     {
                         db.collection("User")
@@ -385,6 +390,13 @@ double source_lat=0,source_lon=0,dest_lat=0,dest_lon=0;
 
                         db.collection("User").document(mUser.getPhoneNumber())
                                 .update("tokens", FieldValue.increment(-1*total));
+                    }
+
+
+                    else
+                    {
+                        Toast.makeText(getActivity(), "Not enough tokens", Toast.LENGTH_SHORT);
+
                     }
                 }
             }
@@ -500,6 +512,37 @@ double source_lat=0,source_lon=0,dest_lat=0,dest_lon=0;
 
         }
 
+
+
+          public void  setTextViewText(String x)
+          {
+              source.setText(x);
+              bus_no.setEnabled(true);
+
+              db.collection("Stop").document(x).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                  @Override
+                  public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                      if(task.isSuccessful())
+                      {
+                          DocumentSnapshot documentSnapshot=task.getResult();
+                          source_lat=Double.parseDouble(documentSnapshot.get("Latitude").toString());
+                          source_lon=Double.parseDouble(documentSnapshot.get("Longitude").toString());
+                          Log.e(TAG,"lllllllllllllllllllllllllllllllllllllllll"+source_lat+source_lon);
+
+
+                      }
+                  }
+              });
+              setBusNoSPinner(source.getText().toString());
+
+          }
+
+          public void setdirection(int d)
+          {
+              direction=d;
+
+          }
+//
 //        Polyline polyline1 = googleMap.addPolyline(new PolylineOptions()
 //                .clickable(true)
 //                .add(
@@ -509,7 +552,7 @@ double source_lat=0,source_lon=0,dest_lat=0,dest_lon=0;
 //                        new LatLng(-33.501, 150.217),
 //                        new LatLng(-32.306, 149.248),
 //                        new LatLng(-32.491, 147.309)));
-//
+
 //    @Override
 //    public void onMapReady(GoogleMap googleMap) {
 //
@@ -587,8 +630,8 @@ double source_lat=0,source_lon=0,dest_lat=0,dest_lon=0;
 ////            Toast.makeText(getActivity(), "Route type " ,
 ////                    Toast.LENGTH_SHORT).show();
 //        }
-//
-//
+
+
 
 }
 
