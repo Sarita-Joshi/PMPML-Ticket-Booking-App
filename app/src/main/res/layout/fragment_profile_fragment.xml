@@ -25,23 +25,28 @@
         android:gravity="center_horizontal"
         android:background="#fff">
 
-        <TextView
-            android:id="@+id/name_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Name"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textStyle="bold"
-            android:paddingVertical="3dp"/>
+                <TextView
+                    android:id="@+id/name_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Name"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textStyle="bold"
+                    android:paddingVertical="3dp"/>
 
-        <TextView
-            android:id="@+id/phone_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="phone number"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textStyle="bold"
-            android:paddingVertical="3dp"/>
+                <TextView
+                    android:id="@+id/phone_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="phone number"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textStyle="bold"
+                    android:paddingVertical="3dp"/>
+
+
+
+
+
 
         <TextView
             android:id="@+id/email_value"
@@ -60,7 +65,7 @@
             android:text="Balance"
             android:textAlignment="center"
             android:paddingVertical="5dp"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/colorPrimary"
             android:textColor="#fff"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:layout_marginVertical="12dp"/>
@@ -72,7 +77,7 @@
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="312dp"
+            android:layout_height="360dp"
             android:elevation="3dp"
             android:layout_marginHorizontal="8dp"
             android:background="#fff">

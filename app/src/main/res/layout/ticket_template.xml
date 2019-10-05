@@ -224,17 +224,6 @@
                         android:text="01\n01"
                         android:layout_marginEnd="10dp"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="=\n="
-                        android:layout_marginEnd="10dp"/>
-                    <TextView
-                        android:id="@+id/textView_rate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="15.00\n10.00"/>
-
                     </LinearLayout>
 
                     <LinearLayout

@@ -30,11 +30,8 @@ public class checksum extends AppCompatActivity  {
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main_1);
-            //initOrderId();
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
             Intent intent = getIntent();
-            //orderId = intent.getExtras().getString("orderid");
             orderId = uuid_gen();
             custid = intent.getExtras().getString("custid");
             temp = intent.getIntExtra("final_amount", 10);

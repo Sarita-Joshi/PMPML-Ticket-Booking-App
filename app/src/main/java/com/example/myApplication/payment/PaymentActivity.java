@@ -83,7 +83,6 @@ public class PaymentActivity extends AppCompatActivity {
                         intent.putExtra("orderid", orderid);
                         intent.putExtra("custid", mUser.getPhoneNumber().substring(3));
                         intent.putExtra("final_amount", amt);
-                        Toast.makeText(PaymentActivity.this, orderid , Toast.LENGTH_SHORT ).show();
                         startActivityForResult(intent,1);
 
                     }
@@ -104,8 +103,6 @@ public class PaymentActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(PaymentActivity.this, android.Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(PaymentActivity.this, new String[]{android.Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS}, 101);
         }
-
-
 
     }
 

@@ -1,5 +1,7 @@
 
 
+
+
 package com.example.myApplication.fragments;
 
 import android.Manifest;
@@ -7,14 +9,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +35,7 @@ import com.example.myApplication.R;
 import com.example.myApplication.classes.Ticket;
 import com.example.myApplication.adapters.TicketAdapter;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -54,7 +54,6 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
 import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.util.ArrayList;
@@ -113,13 +112,18 @@ int direction=0;
                 pd = new ProgressDialog(getContext());
                 source_btn=v.findViewById(R.id.button_source);
 
-                sourceTextWatcher();
+                setUpMap();
 
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
                         calculateTotal();
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -158,16 +162,11 @@ int direction=0;
                     }
                 });
 
-
-
-
-
-
-
         return v;
     }
 
     private void calculateTotal() {
+
 
                 double double_distance = distance(source_lat, source_lon, dest_lat, dest_lon, "K");
 
@@ -178,7 +177,7 @@ int direction=0;
                     int_distance = 2 * (q + 1);
 
                 }
-
+        Log.e("sdsddg", double_distance+"rrrrrrrrrrrrr"+int_distance);
 
                 db.collection("Price").whereEqualTo("KM", int_distance).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -189,8 +188,8 @@ int direction=0;
 
                                 if (doc != null) {
 
-                                    adult_price = Long.parseLong(doc.get("full").toString());
-                                    child_price = Long.parseLong(doc.get("half").toString());
+                                    adult_price = Integer.parseInt(doc.get("full").toString());
+                                    child_price = Integer.parseInt(doc.get("half").toString());
 
                                     Log.e(TAG, "zzzzzzzzzzzzzzzzzzzzzzzzz" + adult_price + child_price);
 
@@ -205,10 +204,6 @@ int direction=0;
                 });
 
             }
-
-    private void sourceTextWatcher() {
-
-    }
 
     private void setBusNoSPinner(String str) {
 
@@ -226,14 +221,8 @@ int direction=0;
                     return;
                 }
                 for(DocumentSnapshot doc : documentSnapshot){
-
                     list_of_bus_no.add(doc.getId());
                 }
-
-
-
-
-
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
                         android.R.layout.simple_list_item_1,
                         list_of_bus_no);
@@ -278,31 +267,12 @@ int direction=0;
                 }
                 list = (ArrayList<String>)documentSnapshot.get("stopsequence");
 
-
-                if(direction==0)
-                {
-                    int index=list.indexOf(source.getText().toString());
-
-                    for(int i=index; i<list.size();)
-                    {
-                        list.remove(i);
-                    }
+                for(int i=1;;){
+                    if(!list.get(i).equals(source.getText().toString()))
+                    list.remove(i);
+                    else
+                        break;
                 }
-
-                else if(direction==1)
-                {
-
-                    for(int i=1;;){
-
-                        if(!list.get(i).equals(source.getText().toString()))
-                            list.remove(i);
-                        else
-                            break;
-                    }
-
-                }
-
-
 
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
                         android.R.layout.simple_spinner_item,
@@ -391,13 +361,6 @@ int direction=0;
                         db.collection("User").document(mUser.getPhoneNumber())
                                 .update("tokens", FieldValue.increment(-1*total));
                     }
-
-
-                    else
-                    {
-                        Toast.makeText(getActivity(), "Not enough tokens", Toast.LENGTH_SHORT);
-
-                    }
                 }
             }
         });
@@ -482,13 +445,13 @@ int direction=0;
             return;
         }
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         Task<Location> task = fusedLocationProviderClient.getLastLocation();
         task.addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
                 if(location!=null){
                     currentLocation = location;
-
                     SupportMapFragment supportMapFragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map1);
                     if(supportMapFragment!=null)
                     supportMapFragment.getMapAsync(Home_fragment.this);
@@ -512,37 +475,18 @@ int direction=0;
 
         }
 
+            public void setTextViewText(String value) {
 
+                    source.setText(value);
+                    bus_no.setEnabled(true);
+                    setBusNoSPinner(value);
+            }
 
-          public void  setTextViewText(String x)
-          {
-              source.setText(x);
-              bus_no.setEnabled(true);
+            public void setdirection(int parseInt) {
 
-              db.collection("Stop").document(x).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                  @Override
-                  public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                      if(task.isSuccessful())
-                      {
-                          DocumentSnapshot documentSnapshot=task.getResult();
-                          source_lat=Double.parseDouble(documentSnapshot.get("Latitude").toString());
-                          source_lon=Double.parseDouble(documentSnapshot.get("Longitude").toString());
-                          Log.e(TAG,"lllllllllllllllllllllllllllllllllllllllll"+source_lat+source_lon);
+                direction = parseInt;
+            }
 
-
-                      }
-                  }
-              });
-              setBusNoSPinner(source.getText().toString());
-
-          }
-
-          public void setdirection(int d)
-          {
-              direction=d;
-
-          }
-//
 //        Polyline polyline1 = googleMap.addPolyline(new PolylineOptions()
 //                .clickable(true)
 //                .add(
@@ -552,7 +496,7 @@ int direction=0;
 //                        new LatLng(-33.501, 150.217),
 //                        new LatLng(-32.306, 149.248),
 //                        new LatLng(-32.491, 147.309)));
-
+//
 //    @Override
 //    public void onMapReady(GoogleMap googleMap) {
 //
@@ -630,8 +574,8 @@ int direction=0;
 ////            Toast.makeText(getActivity(), "Route type " ,
 ////                    Toast.LENGTH_SHORT).show();
 //        }
-
-
+//
+//
 
 }
 

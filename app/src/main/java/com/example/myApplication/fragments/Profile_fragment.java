@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +24,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.example.myApplication.AboutUs;
 import com.example.myApplication.EditProfile;
 import com.example.myApplication.LoginActivity;
@@ -65,9 +68,6 @@ public class Profile_fragment extends Fragment {
 
 
 
-
-
-
         docref.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -84,12 +84,11 @@ public class Profile_fragment extends Fragment {
                         TextView phone=(TextView)v.findViewById(R.id.phone_value);
                         name.setText(document.getString("name"));
                         email.setText(document.getString("email"));
-
                         int tokens1=document.getLong("tokens").intValue();
-
                         tokens.setText("Balance : " + Integer.toString(tokens1));
                         t = tokens.getText().toString();
                         phone.setText(document.getId());
+
                     }
                 }
                 else
@@ -100,12 +99,11 @@ public class Profile_fragment extends Fragment {
                     TextView phone=(TextView)v.findViewById(R.id.phone_value);
                     name.setText("Fetching from db");
                     email.setText("Fetching from db");
-
-//                    int tokens1=document.getLong("tokens").intValue();
-
+//                  int tokens1=document.getLong("tokens").intValue();
                     tokens.setText("Fetching from db");
-
                     phone.setText("Fetching from db");
+
+
                 }
             }
         });

@@ -79,12 +79,12 @@ public class VerifyOPTFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v= inflater.inflate(R.layout.fragment_verify_otp, container, false);
+        getActivity().getWindow().setStatusBarColor(getResources().getColor(R.color.white));
 
         Bundle bundle = getArguments();
         phonenumber = bundle.getString("Number");
-
         confirm = v.findViewById(R.id.buttonVerify);
-        //otp = v.findViewById(R.id.OTP);
+        pinView = v.findViewById(R.id.firstPinView);
         backButton = v.findViewById(R.id.back_button);
         firebaseAuth = FirebaseAuth.getInstance();
         pinView = v.findViewById(R.id.firstPinView);
@@ -94,9 +94,9 @@ public class VerifyOPTFragment extends Fragment {
             getActivity().finish();
             startActivity(new Intent(getActivity(), MainActivity.class));
         }
+        setPinView(v);
         onConfirmClicked();
         onBackButtonClicked();
-        setPinView(v);
 
 
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
