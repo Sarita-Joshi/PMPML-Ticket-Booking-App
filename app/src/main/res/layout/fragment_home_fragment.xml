@@ -18,13 +18,15 @@
             android:id="@+id/button_source"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Select Source" />
+            android:text="Select Source"/>
 
         <TextView
             android:id="@+id/source"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:textSize="17sp"
+            android:paddingVertical="6dp"
             android:hint="Source Name"
             android:inputType="textPersonName" />
 

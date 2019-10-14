@@ -24,6 +24,7 @@ public class UserDetails extends AppCompatActivity {
 
     EditText email;
     EditText name;
+    EditText password;
     private String TAG="abcd";
 
     Button btn;
@@ -38,15 +39,17 @@ public class UserDetails extends AppCompatActivity {
             public void onClick(View view) {
                 email=(EditText)findViewById(R.id.editText_email);
                 name=(EditText)findViewById(R.id.editText_name);
-
+                password=(EditText)findViewById(R.id.editText_password);
                 FirebaseFirestore db=FirebaseFirestore.getInstance();
                 Map<String, Object> user1 = new HashMap<>();
                 user1.put("name",name.getText().toString());
                 user1.put("email",email.getText().toString());
+                user1.put("password",password.getText().toString());
                 user1.put("tokens",50);
 
 
                 Toast.makeText(UserDetails.this,FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), Toast.LENGTH_SHORT).show();
+
 
                 db.collection("User").document(FirebaseAuth.getInstance()
                         .getCurrentUser().getPhoneNumber())

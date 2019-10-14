@@ -160,12 +160,12 @@ public class Profile_fragment extends Fragment {
 
                         break;
                     }
-                    case 3: //Password Settings
-                    {
-
-                        break;
-                    }
-                    case 4: //Call support
+//                    case 3: //Password Settings
+//                    {
+//
+//                        break;
+//                    }
+                    case 3: //Call support
                     {
 
                         if (ContextCompat.checkSelfPermission(getActivity(),
@@ -192,7 +192,7 @@ public class Profile_fragment extends Fragment {
 
                         break;
                     }
-                    case 5://Info fragment
+                    case 4://Info fragment
                     {
                         BottomNavigationView navigationView =(BottomNavigationView) getActivity().findViewById(R.id.bottom_nav);
                         navigationView.getMenu().getItem(2).setChecked(true);
@@ -206,13 +206,13 @@ public class Profile_fragment extends Fragment {
 
                         break;
                     }
-                    case 6://report an issue
+                    case 5://report an issue
                     {
                         startActivity(new Intent(getActivity(), ReportActivity.class));
 
                         break;
                     }
-                    case 7://about us
+                    case 6://about us
                     {
                         startActivity(new Intent(getActivity(), AboutUs.class));
 

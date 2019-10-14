@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -65,7 +66,7 @@ public class Help_fragment extends Fragment {
         s.setAdapter(adapter);
         d.setAdapter(adapter);
         db = FirebaseFirestore.getInstance();
-        Source source=Source.CACHE;
+
 
        final List<String>l1=new ArrayList<>();
        final ArrayAdapter<String> busadapter=new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,l1);
@@ -73,7 +74,7 @@ public class Help_fragment extends Fragment {
 
         busadapter.notifyDataSetChanged();
 
-        db.collection("Stop").get(source).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("Stop").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
              @Override
              public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful())
@@ -101,7 +102,7 @@ List<String> example=new ArrayList<>();
 
 
 
-
+//        s.setAdapter(adapter1);
 
 
 
@@ -200,9 +201,6 @@ find_buses_button.setOnClickListener(new View.OnClickListener() {
 
                                 if(h3.isEmpty())
                                 {
-
-
-
 
                                     Toast.makeText(getActivity(),"No Buses available",Toast.LENGTH_SHORT).show();
 

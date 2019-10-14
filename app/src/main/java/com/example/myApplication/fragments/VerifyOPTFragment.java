@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.chaos.view.PinView;
 import com.example.myApplication.LoginActivity;
 import com.example.myApplication.MainActivity;
+import com.example.myApplication.Password;
 import com.example.myApplication.R;
 import com.example.myApplication.UserDetails;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -255,7 +256,7 @@ public class VerifyOPTFragment extends Fragment {
                                         if(ds.exists())
                                         {
                                             getActivity().finish();
-                                            Intent intent = new Intent(getActivity(), MainActivity.class);
+                                            Intent intent = new Intent(getActivity(), Password.class);
                                             startActivity(intent);
                                             Log.d(TAG, "signInWithCredential:success");
                                         }

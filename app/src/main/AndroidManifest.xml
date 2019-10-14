@@ -18,6 +18,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature android:name="android.hardware.camera" />
@@ -25,33 +26,27 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/busicon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EditProfile"></activity>
+        <activity android:name=".Password"></activity>
+        <activity android:name=".EditProfile" />
         <activity android:name=".ReportActivity" />
         <activity android:name=".AboutUs" />
         <activity android:name=".UserDetails" />
         <activity android:name=".payment.PaymentActivity" />
-        <activity android:name=".payment.checksum" />
-
-
-
-
-        <!--<activity-->
-            <!--android:name=".QRCodeScanner"-->
-            <!--android:configChanges="orientation|keyboardHidden"-->
-            <!--android:screenOrientation="landscape"-->
-            <!--android:theme="@android:style/Theme.NoTitleBar.Fullscreen"-->
-            <!--android:windowSoftInputMode="stateAlwaysHidden">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.google.zxing.client.android.SCAN" />-->
-
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
+        <activity android:name=".payment.checksum" /> <!-- <activity -->
+        <!-- android:name=".QRCodeScanner" -->
+        <!-- android:configChanges="orientation|keyboardHidden" -->
+        <!-- android:screenOrientation="landscape" -->
+        <!-- android:theme="@android:style/Theme.NoTitleBar.Fullscreen" -->
+        <!-- android:windowSoftInputMode="stateAlwaysHidden"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="com.google.zxing.client.android.SCAN" /> -->
+        <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
